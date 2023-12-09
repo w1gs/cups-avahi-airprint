@@ -34,6 +34,6 @@ if [ `ls -l /config/cupsd.conf 2>/dev/null | wc -l` -ne 0 ]; then
     cp /config/cupsd.conf /etc/cups/cupsd.conf
 fi
 
-/usr/sbin/avahi-daemon --daemonize
+
 /root/printer-update.sh &
 exec /usr/sbin/cupsd -f
