@@ -23,7 +23,7 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	build-base \
 	wget \
 	rsync \
-	&& pip3 --no-cache-dir install --upgrade pip \
+	&& pip3 --no-cache-dir install --upgrade pip --break-system-packages \
 	&& pip3 install pycups --break-system-packages \
 	&& rm -rf /var/cache/apk/*
 
