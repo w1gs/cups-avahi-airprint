@@ -24,7 +24,7 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	wget \
 	rsync \
 	&& pip3 --no-cache-dir install --upgrade pip \
-	&& pip3 install pycups \
+	&& pip3 install pycups --break-system-packages \
 	&& rm -rf /var/cache/apk/*
 
 # This will use port 631
