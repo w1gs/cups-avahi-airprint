@@ -35,5 +35,4 @@ if [ `ls -l /config/cupsd.conf 2>/dev/null | wc -l` -ne 0 ]; then
 fi
 
 
-/root/printer-update.sh &
-exec /usr/sbin/cupsd -f
+/root/printer-update.sh
