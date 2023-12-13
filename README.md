@@ -3,8 +3,7 @@
 Fork from [quadportnick/docker-cups-airprint](https://github.com/quadportnick/docker-cups-airprint)
 
 ### Now supports ARM64 and AMD64!
-Use the *latest* tag to auto choose the right architecture.
-Please test and let me know. I don't have anything at home to test ARM with.
+Use the *latest* or *version#* tags to auto choose the right architecture.
 
 This Alpine-based Docker image runs a CUPS instance that is meant as an AirPrint relay for printers that are already on the network but not AirPrint capable. The other images out there never seemed to work right. I forked the original to use Alpine instead of Ubuntu and work on more host OS's.
 
@@ -16,7 +15,7 @@ This Alpine-based Docker image runs a CUPS instance that is meant as an AirPrint
 
 ### Variables:
 * `CUPSADMIN`: the CUPS admin user you want created - default is CUPSADMIN if unspecified
-* `CUPSPASSWORD`: the password for the CUPS admin user - default is admin username if unspecified
+* `CUPSPASSWORD`: the password for the CUPS admin user - default is the same value as `CUPSADMIN` if unspecified
 
 ### Ports/Network:
 * Must be run on host network. This is required to support multicasting which is needed for Airprint.
