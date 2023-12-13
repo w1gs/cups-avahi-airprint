@@ -31,6 +31,23 @@ docker run --name cups --restart unless-stopped  --net host\
   chuckcharlie/cups-avahi-airprint:latest
 ```
 
+### Example docker compose config:
+```
+version: '3.5'
+services:
+  cups:
+    image: chuckcharlie/cups-avahi-airprint:latest
+    container_name: cups
+    network_mode: host
+    volumes:
+      - </your/services/dir>:/services
+      - </your/config/dir>:/config
+    environment:
+      CUPSADMIN: "<YourAdminUsername>"
+      CUPSPASSWORD: "<YourPassword>"
+    restart: unless-stopped
+```
+
 ## Add and set up printer:
 * CUPS will be configurable at http://[host ip]:631 using the CUPSADMIN/CUPSPASSWORD.
 * Make sure you select `Share This Printer` when configuring the printer in CUPS.
