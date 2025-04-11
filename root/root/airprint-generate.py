@@ -186,10 +186,25 @@ class AirPrintGenerate(object):
                     color.text = 'Color=T'
                     service.append(color)
 
-                if attrs['media-default'] == 'iso_a4_210x297mm':
-                    max_paper = Element('txt-record')
-                    max_paper.text = 'PaperMax=legal-A4'
-                    service.append(max_paper)
+                # Add paper size support with standard AirPrint format
+                paper_sizes = Element('txt-record')
+                paper_sizes.text = 'PaperMax=na-letter'
+                service.append(paper_sizes)
+
+                # Add supported paper sizes with dimensions
+                supported_paper = Element('txt-record')
+                supported_paper.text = 'PaperSize=na-letter:8.5x11in,A4:210x297mm,A5:148x210mm,A6:105x148mm,EnvDL:110x220mm'
+                service.append(supported_paper)
+
+                # Add paper size support flag
+                paper_support = Element('txt-record')
+                paper_support.text = 'PaperSize=T'
+                service.append(paper_support)
+
+                # Add additional paper size attributes
+                paper_attrs = Element('txt-record')
+                paper_attrs.text = 'PaperSizeSupported=na-letter,A4,A5,A6,EnvDL'
+                service.append(paper_attrs)
 
                 pdl = Element('txt-record')
                 fmts = []
