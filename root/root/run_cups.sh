@@ -36,6 +36,26 @@ else
     cp /etc/cups/cupsd.conf /config/cupsd.conf
 fi
 
-/usr/sbin/avahi-daemon --daemonize
+# Function to handle cleanup on exit
+cleanup() {
+    echo "Cleaning up..."
+    if [ -f /var/run/avahi-daemon.pid ]; then
+        PID=$(cat /var/run/avahi-daemon.pid)
+        if kill -0 $PID 2>/dev/null; then
+            kill $PID
+            rm -f /var/run/avahi-daemon.pid
+        fi
+    fi
+    exit 0
+}
+
+# Set up trap for cleanup
+trap cleanup SIGTERM SIGINT
+
+# Start avahi-daemon service in the background
+/root/avahi-service.sh &
+AVAHI_SERVICE_PID=$!
+
+# Start CUPS and printer update
 /root/printer-update.sh &
 exec /usr/sbin/cupsd -f
