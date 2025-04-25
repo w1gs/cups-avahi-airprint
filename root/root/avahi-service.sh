@@ -51,33 +51,24 @@ start_avahi() {
     fi
     
     # Run in foreground to capture logs in container logs
-    # Using -D to run as daemon but with proper process management
+    # Removed -D flag to prevent daemonizing, ensuring logs go to stdout/stderr
     # Adding debug flag for more verbose logging
-    avahi-daemon --no-drop-root --no-chroot --no-proc-title -D --debug
+    echo "Starting avahi-daemon in foreground mode..."
+    exec avahi-daemon --no-drop-root --no-chroot --no-proc-title --debug
     
-    # Wait for daemon to start
-    sleep 2
-    
-    # Verify daemon is running
-    if ! pgrep -f "avahi-daemon" > /dev/null; then
-        echo "Failed to start avahi-daemon"
-        return 1
-    fi
-    
-    return 0
+    # Note: The exec command replaces the current process with avahi-daemon
+    # This function will not return unless there's an error starting avahi-daemon
+    echo "Failed to start avahi-daemon"
+    return 1
 }
 
 # Main service loop
 while true; do
-    # Start avahi-daemon and wait for it to exit
-    if start_avahi; then
-        # Monitor the daemon
-        while pgrep -f "avahi-daemon" > /dev/null; do
-            sleep 5
-        done
-    fi
+    # Start avahi-daemon in foreground mode
+    # If avahi-daemon exits, this loop will restart it
+    start_avahi
     
-    # If avahi-daemon exits, wait a moment before restarting
+    # If we get here, avahi-daemon has exited
     echo "avahi-daemon exited, restarting in 5 seconds..."
     sleep 5
-done 
+done
