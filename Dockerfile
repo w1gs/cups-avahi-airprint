@@ -18,6 +18,7 @@ RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.
 	wget \
 	rsync \
 	py3-pycups \
+	perl \
 	&& rm -rf /var/cache/apk/*
 
 # Build and install brlaser from source
@@ -40,7 +41,9 @@ RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/
     make -j$(nproc) && \
     make install && \
     cd .. && \
-    rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz
+    rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz && \
+    # Fix cups-genppdupdate script shebang
+    sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
 
 # This will use port 631
 EXPOSE 631
