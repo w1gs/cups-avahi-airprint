@@ -86,7 +86,7 @@ start_avahi() {
     # Removed -D flag to prevent daemonizing, ensuring logs go to stdout/stderr
     # Adding debug flag for more verbose logging
     echo "Starting avahi-daemon in foreground mode..."
-    exec avahi-daemon --no-drop-root --no-chroot --no-proc-title --debug
+    exec avahi-daemon --no-drop-root --no-chroot --no-proc-title --debug --daemonize
 
     # Note: The exec command replaces the current process with avahi-daemon
     # This function will not return unless there's an error starting avahi-daemon

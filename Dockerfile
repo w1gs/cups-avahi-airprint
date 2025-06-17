@@ -1,49 +1,54 @@
-FROM alpine:3.20
+FROM debian:bookworm-slim
 
 # Install the packages we need. Avahi will be included
-RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/edge/testing\nhttps://dl-cdn.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories &&\
-	apk add --update cups \
-	cups-libs \
+RUN apt-get update && apt-get install -y cups \
+	gcc \
 	cups-pdf \
 	cups-client \
 	cups-filters \
-	cups-dev \
+	libcups2-dev \
 	ghostscript \
-	hplip \
-	avahi \
+	avahi-daemon \
 	inotify-tools \
+	python3-setuptools \
 	python3 \
 	python3-dev \
-	build-base \
 	wget \
 	rsync \
-	py3-pycups \
 	perl \
-	&& rm -rf /var/cache/apk/*
+	git \
+	printer-driver-cups-pdf \
+	gettext \
+	cmake \
+	pkg-config
+
+RUN git clone https://github.com/OpenPrinting/pycups.git && \
+	cd pycups && \
+	make && \
+	make install
 
 # Build and install brlaser from source
-RUN apk add --no-cache git cmake && \
-    git clone https://github.com/pdewacht/brlaser.git && \
-    cd brlaser && \
-    cmake . && \
-    make && \
-    make install && \
-    cd .. && \
-    rm -rf brlaser
+# RUN git clone https://github.com/pdewacht/brlaser.git && \
+#     cd brlaser && \
+#     cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 . && \
+#     make && \
+#     make install && \
+#     cd .. && \
+#     rm -rf brlaser
 
 # Build and install gutenprint from source
-RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
-    tar -xJf gutenprint-5.3.5.tar.xz && \
-    cd gutenprint-5.3.5 && \
-    # Patch to rename conflicting PAGESIZE identifiers to GPT_PAGESIZE in all files in src/testpattern
-    find src/testpattern -type f -exec sed -i 's/\bPAGESIZE\b/GPT_PAGESIZE/g' {} + && \
-    ./configure && \
-    make -j$(nproc) && \
-    make install && \
-    cd .. && \
-    rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz && \
-    # Fix cups-genppdupdate script shebang
-    sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
+# RUN wget -O gutenprint-5.3.5.tar.xz https://sourceforge.net/projects/gimp-print/files/gutenprint-5.3/5.3.5/gutenprint-5.3.5.tar.xz/download && \
+#     tar -xJf gutenprint-5.3.5.tar.xz && \
+#     cd gutenprint-5.3.5 && \
+#     # Patch to rename conflicting PAGESIZE identifiers to GPT_PAGESIZE in all files in src/testpattern
+#     find src/testpattern -type f -exec sed -i 's/\bPAGESIZE\b/GPT_PAGESIZE/g' {} + && \
+#     ./configure && \
+#     make -j$(nproc) && \
+#     make install && \
+#     cd .. && \
+#     rm -rf gutenprint-5.3.5 gutenprint-5.3.5.tar.xz && \
+#     # Fix cups-genppdupdate script shebang
+#     sed -i '1s|.*|#!/usr/bin/perl|' /usr/sbin/cups-genppdupdate
 
 # This will use port 631
 EXPOSE 631

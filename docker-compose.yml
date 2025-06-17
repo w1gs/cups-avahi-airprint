@@ -1,15 +1,15 @@
-version: '3.5'
-
 services:
   cups:
     container_name: cups
-    image: chuckcharlie/cups-avahi-airprint
-    #build: .
+    build: .
     restart: always
-    network_mode: "host"
+    network_mode: host
     environment:
       CUPSADMIN: cups
       CUPSPASSWORD: cups
+      RUNLEVEL: 1
+    ports:
+      - 631:631
     volumes:
-      - "./services:/services"
-      - "./config:/config"
+      - ./services:/services
+      - ./config:/config
