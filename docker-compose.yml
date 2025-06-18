@@ -5,6 +5,7 @@ services:
     restart: always
     network_mode: host
     platform: linux/amd64
+    privileged: true
     environment:
       PRINTER_ID: Brother_720
       CUPSADMIN: cups
@@ -17,4 +18,4 @@ services:
     volumes:
       - ./services:/services
       - ./config:/config
-      - /tmp/output:/mnt/output
+      - /output:/output

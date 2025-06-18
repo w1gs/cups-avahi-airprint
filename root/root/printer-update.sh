@@ -3,11 +3,11 @@
 while read -r directory events filename; do
 	if [ "$filename" = "printers.conf" ]; then
 		rm -rf /services/AirPrint-*.service
-		/root/airprint-generate.py -d /services
-		cp /etc/cups/printers.conf /config/printers.conf
-		rsync -avh /services/ /etc/avahi/services/
+		/opt/opt/root/airprint-generate.py -d /opt/services
+		cp /etc/cups/printers.conf /opt/config/printers.conf
+		rsync -avh /opt/services/ /etc/avahi/services/
 	fi
 	if [ "$filename" = "cupsd.conf" ]; then
-		cp /etc/cups/cupsd.conf /config/cupsd.conf
+		cp /etc/cups/cupsd.conf /opt/config/cupsd.conf
 	fi
 done

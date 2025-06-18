@@ -1,5 +1,12 @@
 FROM debian:bookworm-slim
 
+ENV PRINTER_ID=Brother_720 \
+      CUPSADMIN=cups \
+      CUPSPASSWORD=cups \
+      RUNLEVEL=1 \
+      DEBIAN_FRONTEND=noninteractive \
+      OUTPUT_SUBPATH=vprint
+
 # Install the packages we need. Avahi will be included
 RUN apt-get update && apt-get install -y cups \
 	gcc \
@@ -30,16 +37,12 @@ RUN git clone https://github.com/OpenPrinting/pycups.git && \
 # This will use port 631
 EXPOSE 631
 
-# We want a mount for these
-VOLUME /config
-VOLUME /services
-
 # Add scripts
-ADD root /
-RUN chmod +x /root/*
-
+WORKDIR /opt/
+COPY . .
+RUN chmod +x /opt/root/root/run_cups.sh && chmod +x /opt/root/root/avahi-service.sh && chmod +x /opt/root/root/printer-update.sh
 #Run Script
-CMD ["/root/run_cups.sh"]
+CMD ["/opt/root/root/run_cups.sh"]
 
 # Baked-in config file changes
 RUN sed -i 's/Listen localhost:631/Listen 0.0.0.0:631/' /etc/cups/cupsd.conf && \

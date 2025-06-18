@@ -17,24 +17,22 @@ if [ $(grep -ci $CUPSADMIN /etc/shadow) -eq 0 ]; then
 fi
 echo $CUPSADMIN:$CUPSPASSWORD | chpasswd
 
-mkdir -p /config/ppd
-mkdir -p /services
-rm -rf /etc/avahi/services/*
-rm -rf /etc/cups/ppd
-ln -s /config/ppd /etc/cups
-cat /config/cups-pdf.conf | envsubst > /etc/cups/cups-pdf.conf
+cat /opt/config/cups-pdf.conf | envsubst > /etc/cups/cups-pdf.conf
+cat /opt/config/cupsd.conf | envsubst > /etc/cups/cupsd.conf
+cat /opt/config/printers.conf | envsubst > /etc/cups/printers.conf
+
 cp /usr/share/ppd/cups-pdf/CUPS-PDF_noopt.ppd /etc/cups/ppd/${PRINTER_ID}.ppd
 
-if [ `ls -l /services/*.service 2>/dev/null | wc -l` -gt 0 ]; then
-	cp -f /services/*.service /etc/avahi/services/
+if [ `ls -l /opt/services/*.service 2>/dev/null | wc -l` -gt 0 ]; then
+	cp -f /opt/services/*.service /etc/avahi/services/
 fi
-if [ `ls -l /config/printers.conf 2>/dev/null | wc -l` -eq 0 ]; then
-    touch /config/printers.conf
+if [ `ls -l /opt/config/printers.conf 2>/dev/null | wc -l` -eq 0 ]; then
+    touch /opt/config/printers.conf
 fi
-cp /config/printers.conf /etc/cups/printers.conf
+cp /opt/config/printers.conf /etc/cups/printers.conf
 
-if [ `ls -l /config/cupsd.conf 2>/dev/null | wc -l` -ne 0 ]; then
-    cp /config/cupsd.conf /etc/cups/cupsd.conf
+if [ `ls -l /opt/config/cupsd.conf 2>/dev/null | wc -l` -ne 0 ]; then
+    cp /opt/config/cupsd.conf /etc/cups/cupsd.conf
 else
     cp /etc/cups/cupsd.conf /config/cupsd.conf
 fi
@@ -69,12 +67,12 @@ if [ -f /var/run/avahi-daemon.pid ]; then
 fi
 
 # Start avahi-daemon service in the background
-/root/avahi-service.sh &
+/opt/root/root/avahi-service.sh &
 AVAHI_SERVICE_PID=$!
 
-# Wait a moment to ensure avahi-daemon has started and created its PID file
+# Wait a moment to ensure avahi-daemon has s and created its PID file
 sleep 2
 
 # Start CUPS and printer update
-/root/printer-update.sh &
+/opt/root/root/printer-update.sh &
 exec /usr/sbin/cupsd -f
