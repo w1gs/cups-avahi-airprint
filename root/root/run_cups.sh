@@ -21,7 +21,8 @@ mkdir -p /config/ppd
 mkdir -p /services
 rm -rf /etc/avahi/services/*
 rm -rf /etc/cups/ppd
-cat cups-pdf.conf | envsubst > /etc/cups/cups-pdf.conf
+cat /config/cups-pdf.conf | envsubst > /etc/cups/cups-pdf.conf
+cp /usr/share/ppd/cups-pdf/CUPS-PDF_noopt.ppd /etc/cups/ppd/${PRINTER_ID}.ppd
 ln -s /config/ppd /etc/cups
 if [ `ls -l /services/*.service 2>/dev/null | wc -l` -gt 0 ]; then
 	cp -f /services/*.service /etc/avahi/services/

@@ -5,6 +5,7 @@ services:
     restart: always
     network_mode: host
     environment:
+      PRINTER_ID: Brother_720
       CUPSADMIN: cups
       CUPSPASSWORD: cups
       RUNLEVEL: 1
