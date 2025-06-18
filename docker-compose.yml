@@ -4,13 +4,14 @@ services:
     build: .
     restart: always
     network_mode: host
+    platform: linux/amd64
     environment:
       PRINTER_ID: Brother_720
       CUPSADMIN: cups
       CUPSPASSWORD: cups
       RUNLEVEL: 1
       DEBIAN_FRONTEND: noninteractive
-      OUTPUT_SUBPATH: 'vprint'
+      OUTPUT_SUBPATH: vprint
     ports:
       - 631:631
     volumes:
