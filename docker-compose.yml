@@ -8,8 +8,11 @@ services:
       CUPSADMIN: cups
       CUPSPASSWORD: cups
       RUNLEVEL: 1
+      DEBIAN_FRONTEND: noninteractive
+      OUTPUT_SUBPATH: 'vprint'
     ports:
       - 631:631
     volumes:
       - ./services:/services
       - ./config:/config
+      - /tmp/output:/mnt/output
